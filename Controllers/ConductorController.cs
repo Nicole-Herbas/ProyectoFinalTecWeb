@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTOS;
 using ProyectoFinal.Models.DTOS.ProyectoFinal.Models.DTOS;
 using ProyectoFinal.Services;
@@ -16,30 +18,50 @@ namespace ProyectoFinal.Controllers
             _service = service;
             _viajes = viajes;
         }
+
+        // GET: api/conductor
+        [HttpGet]
+        public async Task<IActionResult> GetAllConductores()
+        {
+            IEnumerable<Conductor> items = await _service.GetAll();
+            return Ok(items);
+        }
+
+        // GET: api/conductor/{id}
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetOne(Guid id)
+        {
+            var conductor = await _service.GetOne(id);
+            return Ok(conductor);
+        }
+
         // POST: api/conductor
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateConductorDto dto)
         {
             var id = await _service.CreateAsync(dto);
-            return Created($"api/v1/speakers/{id}", new { id });
+            return Created($"api/conductor/{id}", new { id });
         }
 
-        // GET: api/conductor/{id}/viajes
-        [HttpGet("{id:int}/viajes")]
-        public async Task<IActionResult> GetViajes(int id)
+        // PUT: api/conductor/{id}
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateConductor([FromBody] UpdateConductorDto dto, Guid id)
         {
-            var data = await _service.GetViajesAsync(id);
-            if (data == null) return NotFound();
-            return Ok(data);
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            var conductor = await _service.UpdateConductor(dto, id);
+            return CreatedAtAction(nameof(GetOne), new { id = conductor.Id }, conductor);
         }
 
-        // POST: api/conductor/talks
-        [HttpPost("talks")]
-        public async Task<IActionResult> AddViaje([FromBody] CreateConductorDto dto)
+        // DELETE: api/conductor/{id}
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteConductor(Guid id)
         {
-            await _viajes.AddViajeAsync(dto);
-            return Ok();
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            await _service.DeleteConductor(id);
+            return NoContent();
         }
+
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterConductorDto dto)
@@ -48,20 +70,6 @@ namespace ProyectoFinal.Controllers
             return CreatedAtAction(nameof(Register), new { id }, null);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto dto)
-        {
-            var (ok, response) = await _service.LoginAsync(dto);
-            if (!ok || response is null) return Unauthorized();
-            return Ok(response);
-        }
-
-        [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshRequestDto dto)
-        {
-            var (ok, response) = await _service.RefreshAsync(dto);
-            if (!ok || response is null) return Unauthorized();
-            return Ok(response);
-        }
+        
     }
 }

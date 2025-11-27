@@ -1,15 +1,20 @@
-﻿using ProyectoFinal.Models.DTOS;
+﻿using ProyectoFinal.Models;
+using ProyectoFinal.Models.DTOS;
 using ProyectoFinal.Models.DTOS.ProyectoFinal.Models.DTOS;
 
 namespace ProyectoFinal.Services
 {
     public interface IConductorService
     {
-        Task<int> CreateAsync(CreateConductorDto dto);
-        //Task<ConductorViajesDto?> GetViajesAsync(int id);
-
-        //Task<(bool ok, LoginResponseDto? response)> LoginAsync(LoginDto dto);
+        //Authentication
         Task<string> RegisterAsync(RegisterConductorDto dto);
-        //Task<(bool ok, LoginResponseDto? response)> RefreshAsync(RefreshRequestDto dto);
+
+        //CRUD
+        Task<Guid> CreateAsync(CreateConductorDto dto);
+        Task<IEnumerable<Conductor>> GetAll();
+        Task<Conductor> GetOne(Guid id);
+        Task<Conductor> UpdateConductor(UpdateConductorDto dto, Guid id);
+        Task DeleteConductor(Guid id);
+     
     }
 }

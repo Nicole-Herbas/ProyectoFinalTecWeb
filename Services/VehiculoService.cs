@@ -1,4 +1,4 @@
-﻿using ProyectoFinal.Models;
+using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTOS;
 using ProyectoFinal.Repositories;
 
@@ -22,11 +22,9 @@ namespace ProyectoFinal.Services
 
             var vehiculo = new Vehiculo
             {
+                Id = Guid.NewGuid(),
                 Placa = dto.Placa,
-                Color = dto.Color,
-                Estado = dto.Estado,
-                ModeloId = dto.ModeloId,
-                ConductorId = dto.ConductorId
+                Estado = "Activo"
             };
 
             await _vehiculos.AddAsync(vehiculo);
@@ -36,8 +34,13 @@ namespace ProyectoFinal.Services
 
         public async Task<object?> GetByIdAsync(int id)
         {
-            var v = await _vehiculos.GetByIdAsync(id);
-            if (v == null) return null;
+            var vehiculo = await _vehiculos.GetVehiculoAsync(id);
+            if (vehiculo == null) return false;
+
+
+            if (!string.IsNullOrWhiteSpace(dto.Estado))
+                vehiculo.Estado = dto.Estado;
+
 
             // puedes armar un DTO para la respuesta
             return new

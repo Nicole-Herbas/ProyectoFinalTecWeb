@@ -15,14 +15,27 @@ namespace ProyectoFinal.Repositories
             await _ctx.SaveChangesAsync();
         }
 
+        public async Task Delete(Conductor conductor)
+        {
+            _ctx.Conductores.Remove(conductor);
+            await _ctx.SaveChangesAsync();
+        }
+
         public Task<bool> ExistsAsync(Guid id) =>
             _ctx.Conductores.AnyAsync(s => s.Id == id);
+
+        public async Task<IEnumerable<Conductor>> GetAll()
+        {
+            return await _ctx.Conductores.ToListAsync();
+        }
 
         public Task<Conductor?> GetByEmailAddress(string email) =>
             _ctx.Conductores.FirstOrDefaultAsync(u => u.Email == email);
 
-        public Task<Conductor?> GetByRefreshToken(string refreshToken) =>
-            _ctx.Conductores.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+        public async Task<Conductor> GetOne(Guid id)
+        {
+            return await _ctx.Conductores.FirstOrDefaultAsync(x => x.Id == id);
+        }
 
         public Task<Conductor?> GetViajesAsync(Guid id) =>
             _ctx.Conductores
@@ -31,10 +44,11 @@ namespace ProyectoFinal.Repositories
 
         public Task<int> SaveChangesAsync() => _ctx.SaveChangesAsync();
 
-        public async Task UpdateAsync(Conductor conductor)
+        public async Task Update(Conductor conductor)
         {
             _ctx.Conductores.Update(conductor);
             await _ctx.SaveChangesAsync();
         }
+
     }
 }

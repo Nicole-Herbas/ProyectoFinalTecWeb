@@ -9,17 +9,19 @@ namespace ProyectoFinal.Models
         public string Destino { get; set; }
         public decimal Precio { get; set; }
         public string Estado { get; set; }
-        public DateTime FechaSalida { get; set; }
+        public DateTime FechaSolicitud { get; set; }
+        public DateTime FechaFinalizacion { get; set; }
 
-        //TODO: Relacion con Pasajero 1:M
+        //Relacion con Pasajero 1:M
 
-        public int PasajeroId { get; set; }
+        public Guid PasajeroId { get; set; }
 
-        //public Pasajero Pasajero { get; set; } = default!;
+        //public Pasajero? Pasajero { get; set; } = default!;
 
-        public int ConductorId { get; set; }
-        public Conductor Conductor { get; set; } = default!;
+        //Relacion con Conductor 1:M
 
+        public Guid ConductorId { get; set; }
+        public Conductor? Conductor { get; set; } = default!;
 
     }
 }

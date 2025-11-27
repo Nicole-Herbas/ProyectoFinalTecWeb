@@ -19,6 +19,11 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+
 /*
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
@@ -31,6 +36,10 @@ builder.Services.AddScoped<IViajeService, ViajeService>();
 
 builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
+
+builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
+builder.Services.AddScoped<IConductorService, ConductorService>();
+
 
 var app = builder.Build();
 

@@ -14,20 +14,19 @@ namespace ProyectoFinal.Services
         }
         public async Task<int> CreateAsync(CreateViajeDto dto)
         {
-            var endUtc = dto.FechaSalida.Kind == DateTimeKind.Unspecified
-                ? DateTime.SpecifyKind(dto.FechaSalida, DateTimeKind.Utc)
-                : dto.FechaSalida.ToUniversalTime();
+            var endUtc = dto.FechaFinalizacion.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(dto.FechaFinalizacion, DateTimeKind.Utc)
+                : dto.FechaFinalizacion.ToUniversalTime();
 
-            var overlaps = await _viajes.HasOverlapAsync(dto.PasajeroId, endUtc);
-            if (overlaps)
-                throw new InvalidOperationException("The room already has a talk in this time range.");
+           
 
             var viaje = new Viaje
             {
                 Id = Guid.NewGuid(),
                 Origen = dto.Origen,
                 Destino = dto.Destino,
-                FechaSalida = dto.FechaSalida,
+                FechaFinalizacion = dto.FechaFinalizacion,
+                FechaSolicitud = dto.FechaSolicitud,
                 Precio = dto.Precio,
                 Estado = dto.Estado
             };
