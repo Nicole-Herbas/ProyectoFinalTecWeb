@@ -16,7 +16,7 @@ namespace ProyectoFinal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateVehicleDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateVehiculoDto dto)
         {
             var id = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
@@ -34,17 +34,17 @@ namespace ProyectoFinal.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateVehicleDto dto)
         {
-            var ok = await _service.UpdateAsync(id, dto);
-            if (!ok) return NotFound();
-            return NoContent();
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            var vehiculo = await _service.UpdateAsync(dto, id);
+            return CreatedAtAction(nameof(GetById), new { id = vehiculo.Id }, vehiculo);
         }
 
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var ok = await _service.DeleteAsync(id);
-            if (!ok) return NotFound();
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            await _service.DeleteAsync(id);
             return NoContent();
         }
     }

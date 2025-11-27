@@ -14,9 +14,9 @@ namespace ProyectoFinal.Models.DTOS
         public string Estado { get; set; } = "Activo";
 
         [Required]
-        public int ModeloId { get; set; }
+        public Guid ModeloId { get; set; }
 
         [Required]
-        public int ConductorId { get; set; }
+        public Guid ConductorId { get; set; }
     }
 }

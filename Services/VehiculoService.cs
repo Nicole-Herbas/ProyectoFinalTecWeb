@@ -13,50 +13,50 @@ namespace ProyectoFinal.Services
             _vehiculos = vehiculos;
         }
 
-        public async Task<int> CreateAsync(CreateVehiculoDto dto)
+        public async Task<Guid> CreateAsync(CreateVehiculoDto dto)
         {
             // ejemplo simple: evitar placas repetidas
             var exists = await _vehiculos.PlacaExistsAsync(dto.Placa);
             if (exists)
                 throw new InvalidOperationException("Ya existe un vehículo con esa placa.");
 
-            var vehiculo = new Vehiculo
-            {
-                Id = Guid.NewGuid(),
-                Placa = dto.Placa,
-                Estado = "Activo"
-            };
-
-            await _vehiculos.AddAsync(vehiculo);
+           
+            var entity = new Vehiculo { Placa = dto.Placa, Color = dto.Color, Estado = dto.Estado, ModeloId = dto.ModeloId, ConductorId = dto.ConductorId };
+            await _vehiculos.AddAsync(entity);
             await _vehiculos.SaveChangesAsync();
-            return vehiculo.Id;
+            return entity.Id;
+
         }
 
-        public async Task<object?> GetByIdAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
-            var vehiculo = await _vehiculos.GetVehiculoAsync(id);
-            if (vehiculo == null) return false;
+            Vehiculo? vehiculo = (await GetAll()).FirstOrDefault(h => h.Id == id);
+            if (vehiculo == null) return;
+            await _vehiculos.Delete(vehiculo);
+        }
 
+        public async Task<IEnumerable<Vehiculo>> GetAll()
+        {
+            return await _vehiculos.GetAll();
+        }
 
-            if (!string.IsNullOrWhiteSpace(dto.Estado))
-                vehiculo.Estado = dto.Estado;
+        public async Task<Vehiculo> GetByIdAsync(Guid id)
+        {
+            return await _vehiculos.GetByIdAsync(id);
+        }
 
+        public async Task<Vehiculo> UpdateAsync(UpdateVehicleDto dto, Guid id)
+        {
+            Vehiculo? vehiculo = await GetByIdAsync(id);
+            if (vehiculo == null) throw new Exception("Vehiculo doesnt exist.");
 
-            // puedes armar un DTO para la respuesta
-            return new
-            {
-                v.Id,
-                v.Placa,
-                v.Color,
-                v.Estado,
-                Modelo = new
-                {
-                    v.Modelo.Id,
-                    v.Modelo.Marca,
-                    v.Modelo.Nombre,
-                    v.Modelo.Año
-                }
-            };
+            vehiculo.Color = dto.Color;
+            vehiculo.Estado = dto.Estado;
+            vehiculo.ModeloId = dto.ModeloId;
+            vehiculo.ConductorId = dto.ConductorId;
+
+            await _vehiculos.Update(vehiculo);
+            return vehiculo;
         }
     }
 }

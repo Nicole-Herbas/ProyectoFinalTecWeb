@@ -57,7 +57,7 @@ namespace ProyectoFinal.Services
         public async Task<Conductor> UpdateConductor(UpdateConductorDto dto, Guid id)
         {
             Conductor? conductor = await GetOne(id);
-            if (conductor == null) throw new Exception("Hospital doesnt exist.");
+            if (conductor == null) throw new Exception("Conductor doesnt exist.");
 
             conductor.Nombre = dto.Nombre;
             conductor.Licencia = dto.Licencia;
