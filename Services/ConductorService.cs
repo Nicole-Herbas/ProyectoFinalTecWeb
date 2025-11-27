@@ -17,7 +17,7 @@ namespace ProyectoFinal.Services
         }
 
 
-        public async Task<int> CreateAsync(CreateConductorDto dto)
+        public async Task<Guid> CreateAsync(CreateConductorDto dto)
         {
             var entity = new Conductor { Nombre = dto.Nombre, Licencia = dto.Licencia, Telefono = dto.Telefono, Email = dto.Email };
             await _conductores.AddAsync(entity);
