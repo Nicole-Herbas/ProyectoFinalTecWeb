@@ -17,9 +17,12 @@ namespace ProyectoFinal.Services
         }
 
 
-        public Task<int> CreateAsync(RegisterConductorDto dto)
+        public async Task<int> CreateAsync(CreateConductorDto dto)
         {
-            throw new NotImplementedException();
+            var entity = new Conductor { Nombre = dto.Nombre, Licencia = dto.Licencia, Telefono = dto.Telefono, Email = dto.Email };
+            await _conductores.AddAsync(entity);
+            await _conductores.SaveChangesAsync();
+            return entity.Id;
         }
 
         /*

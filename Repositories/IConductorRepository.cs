@@ -4,14 +4,14 @@ namespace ProyectoFinal.Repositories
 {
     public interface IConductorRepository
     {
-        Task<User?> GetByEmailAddress(string email);
-        Task<User?> GetByRefreshToken(string refreshToken);
+        Task<Conductor?> GetByEmailAddress(string email);
+        Task<Conductor?> GetByRefreshToken(string refreshToken);
         Task AddAsync(Conductor conductor);
         Task UpdateAsync(Conductor conductor);
 
 
-        Task<Conductor?> GetViajesAsync(int id);
-        Task<bool> ExistsAsync(int id);
+        Task<Conductor?> GetViajesAsync(Guid id);
+        Task<bool> ExistsAsync(Guid id);
         Task<int> SaveChangesAsync();
     }
 }

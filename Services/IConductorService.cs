@@ -5,7 +5,7 @@ namespace ProyectoFinal.Services
 {
     public interface IConductorService
     {
-        Task<int> CreateAsync(RegisterConductorDto dto);
+        Task<int> CreateAsync(CreateConductorDto dto);
         //Task<ConductorViajesDto?> GetViajesAsync(int id);
 
         //Task<(bool ok, LoginResponseDto? response)> LoginAsync(LoginDto dto);
