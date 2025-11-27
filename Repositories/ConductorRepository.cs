@@ -15,6 +15,12 @@ namespace ProyectoFinal.Repositories
             await _ctx.SaveChangesAsync();
         }
 
+        public async Task Delete(Conductor conductor)
+        {
+            _ctx.Conductores.Remove(conductor);
+            await _ctx.SaveChangesAsync();
+        }
+
         public Task<bool> ExistsAsync(Guid id) =>
             _ctx.Conductores.AnyAsync(s => s.Id == id);
 
@@ -38,10 +44,11 @@ namespace ProyectoFinal.Repositories
 
         public Task<int> SaveChangesAsync() => _ctx.SaveChangesAsync();
 
-        public async Task UpdateAsync(Conductor conductor)
+        public async Task Update(Conductor conductor)
         {
             _ctx.Conductores.Update(conductor);
             await _ctx.SaveChangesAsync();
         }
+
     }
 }

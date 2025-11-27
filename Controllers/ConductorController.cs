@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTOS;
 using ProyectoFinal.Models.DTOS.ProyectoFinal.Models.DTOS;
@@ -42,7 +43,25 @@ namespace ProyectoFinal.Controllers
             return Created($"api/conductor/{id}", new { id });
         }
 
-        
+        // PUT: api/conductor/{id}
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateConductor([FromBody] UpdateConductorDto dto, Guid id)
+        {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            var conductor = await _service.UpdateConductor(dto, id);
+            return CreatedAtAction(nameof(GetOne), new { id = conductor.Id }, conductor);
+        }
+
+        // DELETE: api/conductor/{id}
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteConductor(Guid id)
+        {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            await _service.DeleteConductor(id);
+            return NoContent();
+        }
+
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterConductorDto dto)

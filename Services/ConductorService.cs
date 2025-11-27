@@ -25,9 +25,11 @@ namespace ProyectoFinal.Services
             return entity.Id;
         }
 
-        public Task DeleteConductor(Guid id)
+        public async Task DeleteConductor(Guid id)
         {
-            throw new NotImplementedException();
+            Conductor? conductor = (await GetAll()).FirstOrDefault(h => h.Id == id);
+            if (conductor == null) return;
+            await _conductores.Delete(conductor);
         }
 
         public async Task<IEnumerable<Conductor>> GetAll()
@@ -52,9 +54,18 @@ namespace ProyectoFinal.Services
             return conductor.Id.ToString();
         }
 
-        public Task<Conductor> UpdateConductor(UpdateConductorDto dto, Guid id)
+        public async Task<Conductor> UpdateConductor(UpdateConductorDto dto, Guid id)
         {
-            throw new NotImplementedException();
+            Conductor? conductor = await GetOne(id);
+            if (conductor == null) throw new Exception("Hospital doesnt exist.");
+
+            conductor.Nombre = dto.Nombre;
+            conductor.Licencia = dto.Licencia;
+            conductor.Telefono = dto.Telefono;
+            conductor.Email = dto.Email;
+
+            await _conductores.Update(conductor);
+            return conductor;
         }
     }
 }
