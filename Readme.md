@@ -301,7 +301,9 @@ https://{yourapp}.up.railway.app
 
 Nicole Herbas – Trips
 
-Tu Nombre – Vehicles & Models
+Hassan Lopez – Vehicles & Models
+
+Andres Andrade - Users
 
 (Add more if needed)
 
