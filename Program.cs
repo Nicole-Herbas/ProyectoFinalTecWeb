@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using ProyectoFinal.Data;
 using ProyectoFinal.Repositories;
@@ -29,7 +29,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<IViajeRepository, ViajeRepository>();
 builder.Services.AddScoped<IViajeService, ViajeService>();
-�*/
+¨*/
 
 builder.Services.AddScoped<IViajeRepository, ViajeRepository>();
 builder.Services.AddScoped<IViajeService, ViajeService>();
@@ -45,9 +45,50 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
+    using Microsoft.EntityFrameworkCore;
+using ProyectoFinal.Data;
+using ProyectoFinal.Repositories;
+using ProyectoFinal.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddOpenApi(); // para Swagger/OpenAPI
+
+// 🔴 PostgreSQL (DESACTIVADO POR AHORA)
+// builder.Services.AddDbContext<AppDbContext>(opt =>
+//     opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+// ✅ SQLite (ACTIVO)
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<IViajeRepository, ViajeRepository>();
+builder.Services.AddScoped<IViajeService, ViajeService>();
+
+builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+builder.Services.AddScoped<IVehiculoService, VehiculoService>();
+
+builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
+builder.Services.AddScoped<IConductorService, ConductorService>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
 
 app.UseHttpsRedirection();
 
