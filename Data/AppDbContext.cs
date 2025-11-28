@@ -18,38 +18,38 @@ namespace ProyectoFinal.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Relaci髇 Viaje - Conductor (N:1)
-            modelBuilder.Entity<Viaje>()
-            .HasOne(v => v.Conductor)
-            .WithMany(c => c.Viajes)
-            .HasForeignKey(v => v.ConductorId)
-            .IsRequired()   // Un viaje debe tener si o si un conductor
-            .OnDelete(DeleteBehavior.Restrict);
+              // Relaci贸n Viaje - Conductor (N:1)
+              modelBuilder.Entity<Viaje>()
+              .HasOne(v => v.Conductor)
+              .WithMany(c => c.Viajes)
+              .HasForeignKey(v => v.ConductorId)
+              .IsRequired()   // Un viaje debe tener si o si un conductor
+              .OnDelete(DeleteBehavior.Restrict);
 
-            // Relaci髇 Viaje - Pasajero (N:1)
-            modelBuilder.Entity<Viaje>()
-                .HasOne(v => v.Pasajero)
-                .WithMany(p => p.Viajes)
-                .HasForeignKey(v => v.PasajeroId)
-                .IsRequired()   // Un viaje debe tener si o si un pasajero
-                .OnDelete(DeleteBehavior.Restrict);
+              // Relaci贸n Viaje - Pasajero (N:1)
+              modelBuilder.Entity<Viaje>()
+                  .HasOne(v => v.Pasajero)
+                  .WithMany(p => p.Viajes)
+                  .HasForeignKey(v => v.PasajeroId)
+                  .IsRequired()   // Un viaje debe tener si o si un pasajero
+                  .OnDelete(DeleteBehavior.Restrict);
 
-            // Relaci髇 Conductor - Veh韈ulo (1:N)
-            modelBuilder.Entity<Conductor>()
-                .HasMany(c => c.Vehiculos)
-                .WithOne(v => v.Conductor)
-                .HasForeignKey(v => v.ConductorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+              // Relaci贸n Conductor - Veh铆culo (1:N)
+              modelBuilder.Entity<Conductor>()
+                  .HasMany(c => c.Vehiculos)
+                  .WithOne(v => v.Conductor)
+                  .HasForeignKey(v => v.ConductorId)
+                  .IsRequired()
+                  .OnDelete(DeleteBehavior.Cascade);
 
 
-            // Relaci髇  Veh韈ulo - Modelo (1:1)
-            modelBuilder.Entity<Vehiculo>()
-                .HasOne(v => v.Modelo)
-                .WithOne(m => m.Vehiculo)
-                .HasForeignKey<Vehiculo>(v => v.ModeloId)
-                .IsRequired() // veh韈ulo debe tener SI O SI un modelo
-                .OnDelete(DeleteBehavior.Restrict);
+              // Relaci贸n  Veh铆culo - Modelo (1:1)
+              modelBuilder.Entity<Vehiculo>()
+                  .HasOne(v => v.Modelo)
+                  .WithOne(m => m.Vehiculo)
+                  .HasForeignKey<Vehiculo>(v => v.ModeloId)
+                  .IsRequired() // veh铆culo debe tener SI O SI un modelo
+                  .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
