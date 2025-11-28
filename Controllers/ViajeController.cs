@@ -26,7 +26,6 @@ namespace ProyectoFinal.Controllers
             var id = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetPasajero), new { id }, new { id });
         }
-
         
         // GET: api/viaje/{id}/pasajero
         [HttpGet("{id:Guid}/pasajero")]

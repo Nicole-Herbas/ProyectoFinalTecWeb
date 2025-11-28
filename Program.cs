@@ -40,6 +40,10 @@ builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
 builder.Services.AddScoped<IConductorService, ConductorService>();
 
+builder.Services.AddScoped<IPasajeroRepository, PasajeroRepository>();
+builder.Services.AddScoped<IPasajeroService, PasajeroService>();
+
+
 
 var app = builder.Build();
 

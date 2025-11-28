@@ -17,9 +17,9 @@ namespace ProyectoFinal.Models.DTOS
         [Required]
         public DateTime FechaFinalizacion { get; set; }
         [Required]
-        public int PasajeroId { get; set; }
+        public Guid PasajeroId { get; set; }
         [Required]
-        public int ConductorId { get; set; }
+        public Guid ConductorId { get; set; }
 
     }
 }
