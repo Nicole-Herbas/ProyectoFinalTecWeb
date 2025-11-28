@@ -14,7 +14,7 @@ namespace ProyectoFinal.Repositories
         //CRUD
         Task AddAsync(Conductor conductor);
         Task<IEnumerable<Conductor>> GetAll();
-        Task<Conductor> GetOne(Guid id);
+        Task<Conductor?> GetOne(Guid id);
         Task Update (Conductor conductor);
         Task Delete(Conductor conductor);
 

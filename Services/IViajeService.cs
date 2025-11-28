@@ -4,7 +4,7 @@ namespace ProyectoFinal.Services
 {
     public interface IViajeService
     {
-        Task<int> CreateAsync(CreateViajeDto dto);
+        Task<Guid> CreateAsync(CreateViajeDto dto);
 
         //Task<ViajePasajeroDto?> GetPasajeroAsync(int id);
     }

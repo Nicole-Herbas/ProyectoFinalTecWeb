@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTOS;
 using ProyectoFinal.Services;
 
@@ -21,6 +22,14 @@ namespace ProyectoFinal.Controllers
         {
             var id = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
+        }
+
+        // GET: api/vehiculo
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehiculos()
+        {
+            IEnumerable<Vehiculo> items = await _service.GetAll();
+            return Ok(items);
         }
 
         // GET: api/vehiculo/{id}

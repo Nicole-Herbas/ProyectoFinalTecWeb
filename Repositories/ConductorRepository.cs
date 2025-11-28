@@ -32,15 +32,22 @@ namespace ProyectoFinal.Repositories
         public Task<Conductor?> GetByEmailAddress(string email) =>
             _ctx.Conductores.FirstOrDefaultAsync(u => u.Email == email);
 
-        public async Task<Conductor> GetOne(Guid id)
+        public async Task<Conductor?> GetOne(Guid id)
         {
-            return await _ctx.Conductores.FirstOrDefaultAsync(x => x.Id == id);
+            return await _ctx.Conductores
+            .Include(c => c.Viajes)
+            .Include(c => c.Vehiculos)
+            .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<Conductor?> GetViajesAsync(Guid id) =>
-            _ctx.Conductores
-                .Include(s => s.Viajes)
-                .FirstOrDefaultAsync(s => s.Id == id);
+        public async Task<Conductor?> GetViajesAsync(Guid id)
+        {
+            return await _ctx.Conductores
+                .Include(c => c.Viajes)
+                .Include(c => c.Vehiculos)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
 
         public Task<int> SaveChangesAsync() => _ctx.SaveChangesAsync();
 
