@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models.DTOS.Trip;
 using ProyectoFinal.Services;
 
@@ -7,7 +6,6 @@ namespace ProyectoFinal.Controllers;
 
 [ApiController]
 [Route("api/trips")]
-[Authorize]
 public class TripController : ControllerBase
 {
     private readonly ITripService _service;

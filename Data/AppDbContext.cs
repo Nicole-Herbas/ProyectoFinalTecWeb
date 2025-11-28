@@ -40,5 +40,6 @@ public class AppDbContext : DbContext
             .WithMany(m => m.Vehicles)
             .HasForeignKey(v => v.ModelId)
             .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

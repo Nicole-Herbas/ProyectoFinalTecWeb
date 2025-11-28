@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models.DTOS.Passenger;
 using ProyectoFinal.Services;
 
@@ -7,7 +6,6 @@ namespace ProyectoFinal.Controllers;
 
 [ApiController]
 [Route("api/passengers")]
-[Authorize]
 public class PassengerController : ControllerBase
 {
     private readonly IPassengerService _service;

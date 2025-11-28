@@ -12,9 +12,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 3. BASE DE DATOS (PostgreSQL)
+// 3. BASE DE DATOS (PostgreSQL) – SIN APPSETTINGS, HARD-CODEADO
+var connString = "Host=localhost;Port=5432;Database=taxiapp;Username=postgres;Password=postgres";
+Console.WriteLine($"CONNECTION STRING => {connString}");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(connString));
 
 // 4. REPOSITORIES
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
@@ -27,11 +30,10 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IPassengerService, PassengerService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 var app = builder.Build();
 
-// 6. PIPELINE HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -39,7 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
