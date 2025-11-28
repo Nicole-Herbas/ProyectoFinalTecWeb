@@ -6,6 +6,7 @@ namespace ProyectoFinal.Models
     {
         public Guid Id { get; set; }  
 
+        // Relacion 1:1 Vehiculo -> Modelo
         [Required]
         public string Placa { get; set; } = null!;
 

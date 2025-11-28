@@ -16,7 +16,7 @@ namespace ProyectoFinal.Models
 
         public Guid PasajeroId { get; set; }
 
-        //public Pasajero? Pasajero { get; set; } = default!;
+        public Pasajero? Pasajero { get; set; } = default!;
 
         //Relacion con Conductor 1:M
 
