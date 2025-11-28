@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-
-// --- AQUÍ ESTÁ EL TRUCO: Creamos un "apodo" para evitar choques ---
-using OpenApi = Microsoft.OpenApi.Models;
-
+using Npgsql;
 using ProyectoFinal.Data;
 using ProyectoFinal.Repositories;
 using ProyectoFinal.Services;
+// --- AQUÍ ESTÁ EL TRUCO: Creamos un "apodo" para evitar choques ---
+using OpenApi = Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +55,45 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (!string.IsNullOrEmpty(connectionString) &&
+    (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
+{
+    var uri = new Uri(connectionString);
+
+    var userInfo = uri.UserInfo.Split(':', 2);
+    var user = Uri.UnescapeDataString(userInfo[0]);
+    var pass = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+
+    var builderCs = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port,
+        Username = user,
+        Password = pass,
+        Database = uri.AbsolutePath.Trim('/'),
+        SslMode = SslMode.Require,
+        TrustServerCertificate = true
+    };
+
+    connectionString = builderCs.ConnectionString;
+}
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    Console.WriteLine("Using local database configuration.");
+    // fallback local si quieres
+    var dbName = Environment.GetEnvironmentVariable("POSTGRES_DB");
+    var dbUser = Environment.GetEnvironmentVariable("POSTGRES_USER");
+    var dbPass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+    var dbHost = Environment.GetEnvironmentVariable("POSTGRES_HOST") ?? "localhost";
+    var dbPort = Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? "5432";
+
+    connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPass}";
+}
+
 
 // Base de Datos
 builder.Services.AddDbContext<AppDbContext>(options =>
