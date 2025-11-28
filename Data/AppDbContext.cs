@@ -1,55 +1,44 @@
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Models;
 
-namespace ProyectoFinal.Data
+namespace ProyectoFinal.Data;
+
+public class AppDbContext : DbContext
 {
-    public class AppDbContext : DbContext
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Passenger> Passengers { get; set; }
+    public DbSet<Driver> Drivers { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Model> Models { get; set; }
+    public DbSet<Trip> Trips { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        base.OnModelCreating(modelBuilder);
 
-        public DbSet<Viaje> Viajes => Set<Viaje>();
-        public DbSet<Conductor> Conductores => Set<Conductor>();
-        public DbSet<Pasajero> Pasajeros => Set<Pasajero>();
-        public DbSet<Vehiculo> Vehiculos => Set<Vehiculo>();
-        public DbSet<Modelo> Modelos => Set<Modelo>();
+        modelBuilder.Entity<Trip>()
+            .HasOne(t => t.Passenger)
+            .WithMany(p => p.Trips)
+            .HasForeignKey(t => t.PassengerId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Trip>()
+            .HasOne(t => t.Driver)
+            .WithMany(d => d.Trips)
+            .HasForeignKey(t => t.DriverId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-              // Relación Viaje - Conductor (N:1)
-              modelBuilder.Entity<Viaje>()
-              .HasOne(v => v.Conductor)
-              .WithMany(c => c.Viajes)
-              .HasForeignKey(v => v.ConductorId)
-              .IsRequired()   // Un viaje debe tener si o si un conductor
-              .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Vehicle>()
+            .HasOne(v => v.Driver)
+            .WithMany(d => d.Vehicles)
+            .HasForeignKey(v => v.DriverId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-              // Relación Viaje - Pasajero (N:1)
-              modelBuilder.Entity<Viaje>()
-                  .HasOne(v => v.Pasajero)
-                  .WithMany(p => p.Viajes)
-                  .HasForeignKey(v => v.PasajeroId)
-                  .IsRequired()   // Un viaje debe tener si o si un pasajero
-                  .OnDelete(DeleteBehavior.Restrict);
-
-              // Relación Conductor - Vehículo (1:N)
-              modelBuilder.Entity<Conductor>()
-                  .HasMany(c => c.Vehiculos)
-                  .WithOne(v => v.Conductor)
-                  .HasForeignKey(v => v.ConductorId)
-                  .IsRequired()
-                  .OnDelete(DeleteBehavior.Cascade);
-
-
-              // Relación  Vehículo - Modelo (1:1)
-              modelBuilder.Entity<Vehiculo>()
-                  .HasOne(v => v.Modelo)
-                  .WithOne(m => m.Vehiculo)
-                  .HasForeignKey<Vehiculo>(v => v.ModeloId)
-                  .IsRequired() // vehículo debe tener SI O SI un modelo
-                  .OnDelete(DeleteBehavior.Restrict);
-        }
+        modelBuilder.Entity<Vehicle>()
+            .HasOne(v => v.Model)
+            .WithMany(m => m.Vehicles)
+            .HasForeignKey(v => v.ModelId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
