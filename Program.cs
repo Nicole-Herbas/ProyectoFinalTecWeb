@@ -5,30 +5,33 @@ using ProyectoFinal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. SERVICES
+// 1. Controllers
 builder.Services.AddControllers();
+
+// 2. Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. BASE DE DATOS (PostgreSQL para Railway / Docker)
-// Asegúrate que en appsettings (o en las env vars de Railway) tengas
-// una cadena llamada "Default"
+// 3. BASE DE DATOS (PostgreSQL)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-// 3. INYECCIÓN DE DEPENDENCIAS (tus repos y servicios)
-builder.Services.AddScoped<IViajeRepository, ViajeRepository>();
-builder.Services.AddScoped<IViajeService, ViajeService>();
+// 4. REPOSITORIES
+builder.Services.AddScoped<IDriverRepository, DriverRepository>();
+builder.Services.AddScoped<IPassengerRepository, PassengerRepository>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
+builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
-builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
-builder.Services.AddScoped<IVehiculoService, VehiculoService>();
-
-builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
-builder.Services.AddScoped<IConductorService, ConductorService>();
+// 5. SERVICES
+builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddScoped<IPassengerService, PassengerService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
-// 4. PIPELINE HTTP
+// 6. PIPELINE HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -36,9 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
