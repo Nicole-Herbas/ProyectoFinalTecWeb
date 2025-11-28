@@ -6,11 +6,13 @@ EXPOSE 8080
 # Etapa de build: compila la app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
+# Copia todos los archivos del proyecto al contenedor
 COPY . .
+# Restaura y publica el proyecto en modo Release
 RUN dotnet publish -c Release -o /app/publish
 
 # Etapa final: ejecuta la app compilada
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "Security.Api.dll"]
+ENTRYPOINT ["dotnet", "ProyectoFinal.dll"]
